@@ -17,6 +17,16 @@ public class Field : Singleton<Field>
 
     private bool anyCellMoved; // was there any moves, if so - generate new filled cell
 
+    private void Start()
+    {
+        SwipeDetection.SwipeEvent += OnInput;
+    }
+
+    private void OnDisable()
+    {
+        SwipeDetection.SwipeEvent -= OnInput;
+    }
+
     private void Update()
     {
 #if UNITY_EDITOR
@@ -28,7 +38,6 @@ public class Field : Singleton<Field>
             OnInput(Vector2.down);        
         if (Input.GetKeyDown(KeyCode.D))
             OnInput(Vector2.right);
-
 #endif
     }
 
