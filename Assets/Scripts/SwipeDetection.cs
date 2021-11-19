@@ -55,17 +55,14 @@ public class SwipeDetection : MonoBehaviour
             if (!isMobile && Input.GetMouseButton(0)) 
             { 
                 swipeDelta = (Vector2)Input.mousePosition - startPosition;
-                Debug.Log((Vector2)Input.mousePosition + "==" + startPosition);
 
             }
             else if (Input.touchCount > 0)
                 swipeDelta = Input.GetTouch(0).position - startPosition;
         }
-        //Debug.Log(swipeDelta.magnitude);
 
         if (swipeDelta.magnitude > deadZone) 
         { 
-            //Debug.Log("hi");
             if(SwipeEvent != null) 
             {
                 if (Mathf.Abs(swipeDelta.x) > Mathf.Abs(swipeDelta.y))

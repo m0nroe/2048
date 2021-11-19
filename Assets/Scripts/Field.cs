@@ -4,9 +4,9 @@ using UnityEngine;
 public class Field : Singleton<Field>
 {
     [Header("Field Properties")]
-    public float CellSize; //
-    public float Spacing; //
-    public int FieldSize; // 4x4
+    public float CellSize; 
+    public float Spacing; 
+    public int FieldSize; 
     public int InitialCellcounter = 2;
 
     [Space(10)]
@@ -15,7 +15,7 @@ public class Field : Singleton<Field>
 
     private Cell[,] field;
 
-    private bool anyCellMoved; // was there any moves, if so - generate new filled cell
+    private bool anyCellMoved; // was there any moves
 
     private void Start()
     {
@@ -60,8 +60,8 @@ public class Field : Singleton<Field>
 
     private void Move(Vector2 direction)
     {
-        int startIndex = direction.x > 0 || direction.y < 0 ? FieldSize - 1 : 0; // if move direction is RIGHT or DOWN? start from last index
-        int directionSign = direction.x != 0 ? (int)direction.x : -(int)direction.y; // move to positive or negative direction on coordinate plane 
+        int startIndex = direction.x > 0 || direction.y < 0 ? FieldSize - 1 : 0;        // if move direction is RIGHT or DOWN start from last index
+        int directionSign = direction.x != 0 ? (int)direction.x : -(int)direction.y;    // move to positive or negative direction on coordinate plane 
 
         for (int i = 0; i < FieldSize; i++)
         {
@@ -156,7 +156,6 @@ public class Field : Singleton<Field>
             GameController.Instance.Lose();
     }
 
-
     // Creates empty field
     private void CreateField() 
     {
@@ -182,7 +181,6 @@ public class Field : Singleton<Field>
         }
 
     }
-
 
     public void GenerateField()
     {
@@ -213,7 +211,9 @@ public class Field : Singleton<Field>
 
         int value = Random.Range(0, 10) == 0 ? 2 : 1; // 90% - generate 1, 10% - generate 2
         var cell = emptyCells[Random.Range(0, emptyCells.Count)];
-        cell.SetValue(cell.X, cell.Y, value);
+        cell.SetValue(cell.X, cell.Y, value, false);
+
+        CellAnimationController.Instance.SmoothAppear(cell);
     }
 
     private void ResetCellsflags() 

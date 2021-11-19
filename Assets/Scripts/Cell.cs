@@ -1,6 +1,6 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class Cell : MonoBehaviour
 {
@@ -19,12 +19,15 @@ public class Cell : MonoBehaviour
     [SerializeField] private Image image;
     [SerializeField] private TextMeshProUGUI points;
 
-    public void SetValue(int x, int y, int value)
+    private AnimationCell currentAnimation;
+    
+    public void SetValue(int x, int y, int value, bool updateUI = true)
     {
         X = x;
         Y = y;
         Value = value;
-        UpdateCell();
+        if(updateUI)
+            UpdateCell();
     }
 
     // Update cell's info
@@ -42,7 +45,6 @@ public class Cell : MonoBehaviour
         Value++;
         HasMerged = true;
         GameController.Instance.AddScorePoints(Points);
-        UpdateCell();
     }
 
     public void ResetFlags()
@@ -51,18 +53,30 @@ public class Cell : MonoBehaviour
     }
 
     // Merge with other cell with same Value
-    public void MergeWithCell(Cell othercell)
+    public void MergeWithCell(Cell otherCell)
     {
-        othercell.IncreaseValue();
+        CellAnimationController.Instance.SmoothTransition(this, otherCell, true);
+        otherCell.IncreaseValue();
         SetValue(X, Y, 0);
-        UpdateCell();
     }
 
     // Move to empty cell
     public void MoveToCell(Cell target) 
     {
-        target.SetValue(target.X, target.Y, Value);
+        CellAnimationController.Instance.SmoothTransition(this, target, false);
+
+        target.SetValue(target.X, target.Y, Value, false);
         SetValue(X, Y, 0);
-        UpdateCell();
+    }
+
+    public void SetAnimation(AnimationCell animation) 
+    {
+        currentAnimation = animation;
+    }
+
+    public void CancelAnimation() 
+    {
+        if (currentAnimation != null)
+            currentAnimation.Destroy();
     }
 }
